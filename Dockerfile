@@ -1,6 +1,12 @@
 # Use uma Imagem Official do Python
 FROM python:rc-slim
 
+# Declarando as variaveis
+ENV CLOUD_SQL_USERNAME
+ENV CLOUD_SQL_PASSWORD
+ENV CLOUD_SQL_DATABASE_NAME
+ENV CLOUD_SQL_CONNECTION_NAME
+
 # Definindo o diretório onde a aplicação será armazenada
 WORKDIR /app
 

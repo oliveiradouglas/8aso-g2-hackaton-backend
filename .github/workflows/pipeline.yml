@@ -23,6 +23,13 @@ jobs:
           echo '${{ secrets.GOOGLE_CREDENTIALS }}' > key.json
           cat key.json | docker login -u _json_key --password-stdin ${{ secrets.ARTIFACT_REGISTRY }}
 
+      - name: New Relic License
+        run: |
+          sed -i "s/CLOUD_SQL_USERNAME/CLOUD_SQL_USERNAME=${{ secrets.CLOUD_SQL_USERNAME }}/g" Dockerfile
+          sed -i "s/CLOUD_SQL_PASSWORD/CLOUD_SQL_PASSWORD=${{ secrets.CLOUD_SQL_PASSWORD }}/g" Dockerfile
+          sed -i "s/CLOUD_SQL_DATABASE_NAME/CLOUD_SQL_DATABASE_NAME=${{ secrets.NEW_RELIC_LICENSE_KEY }}/g" Dockerfile
+          sed -i "s/CLOUD_SQL_CONNECTION_NAME/CLOUD_SQL_CONNECTION_NAME=${{ secrets.NEW_RELIC_LICENSE_KEY }}/g" Dockerfile
+
       - name: Build Image & Push
         env: 
           ARTIFACT_REGISTRY_REPO: ${{ secrets.ARTIFACT_REGISTRY_REPO }}
