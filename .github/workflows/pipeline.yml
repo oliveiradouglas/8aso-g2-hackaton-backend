@@ -1,0 +1,55 @@
+# Nome do Workflow
+name: Hackathon Pipeline
+
+# Evento que irá acionar a pipeline
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  Build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Docker Login
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          ARTIFACT_REGISTRY:  ${{ secrets.ARTIFACT_REGISTRY}}
+        run: | 
+          echo '${{ secrets.GOOGLE_CREDENTIALS }}' > key.json
+          cat key.json | docker login -u _json_key --password-stdin ${{ secrets.ARTIFACT_REGISTRY }}
+
+      - name: Build Image & Push
+        env: 
+          ARTIFACT_REGISTRY_REPO: ${{ secrets.ARTIFACT_REGISTRY_REPO }}
+        run: | 
+          docker build -t ${{ secrets.ARTIFACT_REGISTRY_REPO }}/backend:latest .
+          docker push ${{ secrets.ARTIFACT_REGISTRY_REPO }}/backend:latest
+
+  Deploy:
+    needs: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Auth GCP
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        uses: "google-github-actions/auth@v0"
+        with:
+          credentials_json: "${{ secrets.GOOGLE_CREDENTIALS }}"
+
+      - name: Deploy to Cloud Run
+        id: cloudrun
+        uses: "google-github-actions/deploy-cloudrun@v0"
+        with:
+          service: "backend-cloud-run"
+          image: ${{ secrets.ARTIFACT_REGISTRY_REPO }}/backend:latest
+
+      - name: Test
+        run: 'curl "${{ steps.cloudrun.outputs.url }}"'
