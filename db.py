@@ -2,11 +2,11 @@ import os
 import pymysql
 from flask import jsonify
 
-db_user = os.environ.get('CLOUD_SQL_USERNAME')
-db_password = os.environ.get('CLOUD_SQL_PASSWORD')
-db_name = os.environ.get('CLOUD_SQL_DATABASE_NAME')
-db_local_host = os.environ.get('DB_LOCAL_HOST')
-db_connection_name = os.environ.get('CLOUD_SQL_CONNECTION_NAME')
+db_user = os.environ.get('root')
+db_password = os.environ.get('Fiap@132')
+db_name = os.environ.get('bancospot1')
+db_local_host = os.environ.get('35.192.201.130')
+db_connection_name = os.environ.get('hack-aso-grupo-02:us-central1:bancospot1')
 
 def open_connection():
     try:
