@@ -31,6 +31,12 @@ jobs:
           sed -i "s/CLOUD_SQL_CONNECTION_NAME/CLOUD_SQL_CONNECTION_NAME=${{ secrets.CLOUD_SQL_CONNECTION_NAME }}/g" Dockerfile
           sed -i "s/CORS_ORIGINS/CORS_ORIGINS=${{ secrets.CORS_ORIGINS }}/g" Dockerfile
 
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
+
       - name: Build Image & Push
         env: 
           ARTIFACT_REGISTRY_REPO: ${{ secrets.ARTIFACT_REGISTRY_REPO }}
