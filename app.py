@@ -4,10 +4,9 @@ from flask_cors import CORS
 from db import get_songs
 import os 
 
-cors_origins = os.environ.get('CORS_ORIGINS')
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": cors_origins, "send_wildcard": "False"}}) # Compliant
+CORS(app, resources={r"/*": {"origins": "*", "send_wildcard": "False"}}) # Compliant
 csrf = CSRFProtect(app) 
 
 @app.route('/')
