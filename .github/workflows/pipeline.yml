@@ -29,6 +29,7 @@ jobs:
           sed -i "s/CLOUD_SQL_PASSWORD/CLOUD_SQL_PASSWORD=${{ secrets.CLOUD_SQL_PASSWORD }}/g" Dockerfile
           sed -i "s/CLOUD_SQL_DATABASE_NAME/CLOUD_SQL_DATABASE_NAME=${{ secrets.CLOUD_SQL_DATABASE_NAME }}/g" Dockerfile
           sed -i "s/CLOUD_SQL_CONNECTION_NAME/CLOUD_SQL_CONNECTION_NAME=${{ secrets.CLOUD_SQL_CONNECTION_NAME }}/g" Dockerfile
+          sed -i "s/CORS_ORIGINS/CORS_ORIGINS=${{ secrets.CORS_ORIGINS }}/g" Dockerfile
 
       - name: Build Image & Push
         env: 
