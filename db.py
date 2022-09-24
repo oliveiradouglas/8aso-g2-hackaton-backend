@@ -11,6 +11,7 @@ db_connection_name = os.environ.get('CLOUD_SQL_CONNECTION_NAME')
 def open_connection():
     try:
         if db_connection_name:
+            print ('abrindo conexão com cloud run')
             unix_socket = '/cloudsql/{}'.format(db_connection_name)
             conn = pymysql.connect(user=db_user, password=db_password,
                                 unix_socket=unix_socket, db=db_name,
@@ -18,17 +19,21 @@ def open_connection():
                                 )
             print ('tchau')
         else:
-            print ('oi')
+            print ('abrindo conexão com db local')
             conn = pymysql.connect(user=db_user, password=db_password,
                                 host=db_local_host, db=db_name,cursorclass=pymysql.cursors.DictCursor)
 
+        return conn
     except pymysql.MySQLError as e:
         print(e)
 
-    return conn
-
 def get_songs():
     conn = open_connection()
+
+    if not conn:
+        print("erro na conexão com o banco")
+        return []
+
     with conn.cursor() as cursor:
         result = cursor.execute('SELECT * FROM songs;')
         songs = cursor.fetchall()
